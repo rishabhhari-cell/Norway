@@ -7,20 +7,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
-      --forest: #1A2E1A;
-      --forest-2: #244322;
-      --parchment: #F5F3EE;
-      --ink: #172016;
-      --muted: #65705f;
-      --line: #ded8cb;
+      --forest: #BA0C2F;
+      --forest-2: #00205B;
+      --parchment: #F7F9FC;
+      --ink: #101828;
+      --muted: #5D6B82;
+      --line: #D7DEEA;
       --white: #fff;
-      --green: #2f7d46;
-      --navy: #223a5e;
-      --red: #7b2424;
+      --green: #16784C;
+      --navy: #00205B;
+      --red: #BA0C2F;
       --amber: #b7791f;
       --grey: #737373;
+      --pale-red: #FBE8ED;
+      --pale-blue: #E8EEF8;
     }
 
     * { box-sizing: border-box; }
@@ -34,7 +38,7 @@
     }
 
     header {
-      background: var(--forest);
+      background: #BA0C2F;
       color: white;
       padding: 24px 18px 16px;
     }
@@ -56,8 +60,9 @@
 
     .subtitle {
       margin: 10px 0 18px;
-      color: #dfe8da;
+      color: #F7F9FC;
       max-width: 760px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
     }
 
     .tabs, .section-tabs {
@@ -73,13 +78,16 @@
     }
 
     .tab-btn, .section-btn, .compare-btn {
-      border: 1px solid rgba(255,255,255,0.25);
-      background: transparent;
+      border: 1px solid rgba(255,255,255,0.9);
+      background: var(--navy);
       color: white;
       padding: 10px 14px;
       border-radius: 8px;
       white-space: nowrap;
       min-height: 42px;
+      font-family: "Crimson Pro", Georgia, serif;
+      font-size: 1.06rem;
+      font-weight: 700;
     }
 
     .tab-btn.active, .section-btn.active {
@@ -105,8 +113,8 @@
     }
 
     .compare-btn {
-      background: var(--forest);
-      border-color: var(--forest);
+      background: var(--navy);
+      border-color: var(--navy);
       color: white;
     }
 
@@ -114,7 +122,7 @@
       background: white;
       border: 1px solid var(--line);
       border-radius: 8px;
-      box-shadow: 0 1px 0 rgba(26,46,26,0.06);
+      box-shadow: 0 1px 0 rgba(0,32,91,0.08);
     }
 
     .section-shell {
@@ -144,7 +152,7 @@
       padding: 10px;
       display: grid;
       gap: 6px;
-      box-shadow: 0 1px 0 rgba(26,46,26,0.06);
+      box-shadow: 0 1px 0 rgba(0,32,91,0.08);
     }
 
     .day-toc[hidden] {
@@ -168,13 +176,14 @@
       padding: 6px 8px;
       color: var(--ink);
       text-decoration: none;
+      font-family: "Crimson Pro", Georgia, serif;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 1.04rem;
     }
 
     .day-toc a:hover,
     .day-toc a:focus {
-      background: #edf3ea;
+      background: var(--pale-blue);
       color: var(--forest);
       outline: none;
     }
@@ -185,10 +194,12 @@
       border-radius: 50%;
       display: inline-grid;
       place-items: center;
-      background: var(--forest);
+      background: var(--navy);
       color: white;
       flex: 0 0 auto;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 0.78rem;
+      font-weight: 900;
     }
 
     #content {
@@ -212,6 +223,10 @@
       align-items: center;
     }
 
+    .day-head h3 {
+      color: var(--forest);
+    }
+
     .badges {
       display: flex;
       gap: 8px;
@@ -225,8 +240,8 @@
       min-height: 28px;
       border-radius: 999px;
       padding: 4px 10px;
-      background: #edf3ea;
-      color: var(--forest);
+      background: var(--pale-blue);
+      color: var(--navy);
       font-size: 0.88rem;
       font-weight: 700;
       white-space: nowrap;
@@ -243,20 +258,37 @@
       overflow: hidden;
       border: 1px solid var(--line);
       margin: 14px 0;
-      background: #e8eadf;
+      background: var(--pale-blue);
     }
 
-    .route-map-frame {
+    .leaflet-map {
       width: 100%;
       height: 100%;
       display: block;
-      border: 0;
     }
 
-    .map-caption {
-      margin: -6px 0 14px;
-      color: var(--muted);
-      font-size: 0.9rem;
+    .leaflet-tile {
+      color: transparent;
+      font-size: 0;
+    }
+
+    .leaflet-div-icon {
+      background: transparent;
+      border: none;
+    }
+
+    .num-marker {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--forest);
+      color: white;
+      display: grid;
+      place-items: center;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      font-weight: 900;
+      font-size: 0.86rem;
     }
 
     .stop-list {
@@ -281,7 +313,7 @@
     }
 
     .stop-desc {
-      color: #354032;
+      color: #28364A;
       margin-bottom: 5px;
     }
 
@@ -297,7 +329,7 @@
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid var(--line);
-      background: #f4f1e8;
+      background: #F7F9FC;
     }
 
     .stop-row img.broken {
@@ -305,12 +337,17 @@
       padding: 10px;
     }
 
+    .stop-row.no-image {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
     .flight-note {
       margin: 12px 0;
       border: 1px solid var(--line);
       border-radius: 8px;
       overflow: hidden;
-      background: #fbfaf7;
+      background: #F7F9FC;
     }
 
     .flight-note summary {
@@ -322,7 +359,7 @@
 
     .flight-note-content {
       padding: 0 12px 12px;
-      color: #303a2e;
+      color: #263247;
     }
 
     .booking-top {
@@ -335,7 +372,7 @@
 
     .progress {
       height: 12px;
-      background: #e8e2d5;
+      background: var(--pale-blue);
       border-radius: 999px;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -364,8 +401,8 @@
     }
 
     th {
-      color: var(--forest);
-      background: #f9f7f2;
+      color: var(--navy);
+      background: var(--pale-blue);
       font-size: 0.82rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -416,10 +453,10 @@
     .callout {
       margin: 14px 0;
       padding: 12px 14px;
-      background: #fff7e6;
-      border: 1px solid #e7c46f;
+      background: var(--pale-red);
+      border: 1px solid #F1A5B5;
       border-radius: 8px;
-      color: #3f2c00;
+      color: #6F001C;
       font-weight: 700;
     }
 
@@ -534,26 +571,12 @@
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
     }
 
-    function fallbackPhoto(label) {
-      return svgData(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" role="img" aria-label="${label}">
-        <rect width="640" height="440" fill="#eef0e8"/>
-        <circle cx="520" cy="84" r="42" fill="#d7bf7a" opacity=".85"/>
-        <path d="M0 292 118 158l82 89 96-137 112 156 92-96 140 141v129H0z" fill="#1A2E1A" opacity=".82"/>
-        <path d="M0 355c114-66 197-58 304-8 118 55 217 47 336-24v117H0z" fill="#F5F3EE" opacity=".94"/>
-        <text x="32" y="402" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#1A2E1A">${label.replace(/&/g, "&amp;")}</text>
-      </svg>`);
-    }
-
-    const PHOTOS = {
-      fallback: fallbackPhoto("Norway")
-    };
-
     const STOPS = {
       bergenAirport: { name: "Bergen Airport", coord: [60.2934, 5.2181], icon: "🚗", type: "drive/logistics", desc: "Arrive at Flesland and start the Bergen pickup loop.", gbp: 0, imageQuery: "Bergen Airport Flesland" },
-      kaffemisjonen: { name: "Kaffemisjonen", coord: [60.3920, 5.3246], icon: "☕", type: "coffee", desc: "Bergen coffee stop for a proper first flat white.", gbp: 6, imageQuery: "Kaffemisjonen Bergen" },
+      kaffemisjonen: { name: "Kaffemisjonen", coord: [60.3920, 5.3246], icon: "☕", type: "coffee", desc: "Bergen coffee stop for a proper first flat white.", gbp: 6, imageQuery: "Kaffemisjonen Bergen cafe", explicitPhoto: "https://s3-media0.fl.yelpcdn.com/bphoto/BWzL7m4qcvFoNDCYDU8KQg/o.jpg", fallbackQuery: "coffee Bergen cafe" },
       mcrent: { name: "McRent Bergen", coord: [60.3500, 5.1667], icon: "🚗", type: "drive/logistics", desc: "Collect the motorhome and check Sunday/Monday return details.", gbp: 326, imageQuery: "motorhome Norway campervan" },
       mcrentReturn: { name: "McRent Bergen return", coord: [60.3500, 5.1667], icon: "🚗", type: "drive/logistics", desc: "Return the motorhome at 09:00 before taking the light rail into Bergen.", gbp: 0, imageQuery: "motorhome Norway campervan" },
-      rema: { name: "Rema 1000 Straume", coord: [60.3600, 5.1800], icon: "🍽", type: "food", desc: "Stock the van with food for breakfasts, lunches and cabin cooking.", gbp: 37, imageQuery: "Rema 1000 Norway store" },
+      rema: { name: "Rema 1000 Straume", coord: [60.3600, 5.1800], icon: "🍽", type: "food", desc: "Stock the van with food for breakfasts, lunches and cabin cooking.", gbp: 37, imageQuery: "Rema 1000 logo", explicitPhoto: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Rema_1000_logo.svg/640px-Rema_1000_logo.svg.png" },
       steinsdalsfossen: { name: "Steinsdalsfossen", coord: [60.4580, 5.9510], icon: "💧", type: "waterfall", desc: "Walk behind one of Norway's most accessible waterfalls.", gbp: 0, imageQuery: "Steinsdalsfossen" },
       hardangerCamp: { name: "Hardangerfjord wild camp", coord: [60.1498, 6.1244], icon: "🏕", type: "sleep", desc: "Free fjordside overnight base for the first van night.", gbp: 0, imageQuery: "Hardangerfjord" },
       oddadalen: { name: "Oddadalen falls", coord: [60.0200, 6.5500], icon: "💧", type: "waterfall", desc: "Follow the waterfall chain south of Odda.", gbp: 0, imageQuery: "Oddadalen waterfalls" },
@@ -566,20 +589,20 @@
       treBror: { name: "Tre Brør Kafé Voss", coord: [60.6279, 6.4155], icon: "☕", type: "coffee", desc: "Coffee break in Voss on the way to the fjords.", gbp: 6, imageQuery: "Voss Norway" },
       nordicVentures: { name: "Nærøyfjord / Nordic Ventures Gudvangen", coord: [60.8799, 6.8437], icon: "🚣", type: "activity", desc: "Full-day Nærøyfjord kayak tour with BBQ included.", gbp: 66, imageQuery: "Nærøyfjord Gudvangen kayak" },
       flamCamping: { name: "Flåm Marina Camping", coord: [60.8633, 7.1167], icon: "🏕", type: "sleep", desc: "Convenient Flåm campsite after kayaking.", gbp: 9, imageQuery: "Flåm Norway fjord" },
-      aegir: { name: "Ægir Brewpub Flåm", coord: [60.8627, 7.1155], icon: "🍽", type: "food", desc: "Big Viking-style dinner in Flåm.", gbp: 45, imageQuery: "Ægir Brewpub Flåm" },
+      aegir: { name: "Ægir Brewpub Flåm", coord: [60.8627, 7.1155], icon: "🍽", type: "food", desc: "Big Viking-style dinner in Flåm.", gbp: 45, imageQuery: "Ægir Brewpub Flåm", explicitPhoto: "https://images.squarespace-cdn.com/content/v1/5ec51c0ca5d66b2ba8d8e0bf/1610017284804-4G6V8V0B2WFXT3S8J19U/Aegir%2BBrewPub%2B18%2BThor%2BBrodreskift.jpg", fallbackQuery: "Flåm Norway restaurant" },
       flamBakeri: { name: "Flåm Bakeri", coord: [60.8625, 7.1160], icon: "☕", type: "coffee", desc: "Coffee and pastries before the next fjord drive.", gbp: 6, imageQuery: "Flåm Norway fjord" },
       stegastein: { name: "Stegastein viewpoint", coord: [60.9086, 7.2121], icon: "👁", type: "viewpoint", desc: "Aurlandsfjord viewpoint 650 metres above the water.", gbp: 0, imageQuery: "Stegastein viewpoint" },
       fretheim: { name: "Fretheim Fjordhytter", coord: [60.8620, 7.1130], icon: "🏕", type: "sleep", desc: "Waterfront cabin night with boat, shower and wood stove.", gbp: 101, imageQuery: "Flåm Norway fjord" },
       voringsfossen: { name: "Vøringsfossen", coord: [60.4042, 7.2114], icon: "💧", type: "waterfall", desc: "182 m waterfall stop with dramatic viewing platforms.", gbp: 7, imageQuery: "Vøringsfossen" },
       sogndal: { name: "Sogndal", coord: [61.2292, 7.0983], icon: "🚗", type: "drive/logistics", desc: "Sognefjord crossing via Mannheller-Fodnes ferry.", gbp: 11, imageQuery: "Sogndal Sognefjord" },
       stryn: { name: "Stryn", coord: [61.9046, 6.7292], icon: "👁", type: "viewpoint", desc: "Glacier-view detour through classic west Norway scenery.", gbp: 0, imageQuery: "Stryn Norway glacier" },
-      geirangerRoad: { name: "Geiranger / Eagle Road", coord: [62.0833, 7.2667], icon: "👁", type: "viewpoint", desc: "Eagle Road and Dalsnibba viewpoint toll above Geiranger.", gbp: 5, imageQuery: "Geirangerfjord Eagle Road" },
+      geirangerRoad: { name: "Geiranger / Eagle Road", coord: [62.0833, 7.2667], icon: "👁", type: "viewpoint", desc: "Eagle Road and Dalsnibba viewpoint toll above Geiranger.", gbp: 5, imageQuery: "Geirangerfjord Eagle Road", explicitPhoto: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Geiranger_fjord%2C_rainbow.jpg/640px-Geiranger_fjord%2C_rainbow.jpg", fallbackQuery: "Geirangerfjord viewpoint" },
       geirangerKayak: { name: "Geiranger Kayak Centre", coord: [62.1017, 7.2050], icon: "🚣", type: "activity", desc: "Four-hour Seven Sisters kayak on Geirangerfjord.", gbp: 93, imageQuery: "Seven Sisters waterfall Geirangerfjord" },
       hellesylt: { name: "Wild camp Hellesylt", coord: [62.0865, 6.8711], icon: "🏕", type: "sleep", desc: "Free overnight near Hellesylt after the Geiranger push.", gbp: 0, imageQuery: "Hellesylt Norway" },
       trollstigen: { name: "Trollstigen", coord: [62.4598, 7.6700], icon: "👁", type: "viewpoint", desc: "Drive the 11 hairpin bends of Trollstigen.", gbp: 0, imageQuery: "Trollstigen Norway" },
       trollvegen: { name: "Trollvegen", coord: [62.4714, 7.7194], icon: "👁", type: "viewpoint", desc: "Viewpoint beneath Europe's tallest vertical rock wall.", gbp: 0, imageQuery: "Trollveggen Norway" },
       bergenshallen: { name: "Bergenshallen parking", coord: [60.3625, 5.3640], icon: "🏕", type: "sleep", desc: "Motorhome parking in Bergen for the final night.", gbp: 9, imageQuery: "Bergen Norway motorhome" },
-      bryggen: { name: "Bryggen / Fløibanen", coord: [60.3983, 5.3260], icon: "👁", type: "viewpoint", desc: "Bryggen walk, fish market and funicular views.", gbp: 7, imageQuery: "Bryggen Bergen Fløibanen" },
+      bryggen: { name: "Bryggen / Fløibanen", coord: [60.3983, 5.3260], icon: "👁", type: "viewpoint", desc: "Bryggen walk, fish market and funicular views.", gbp: 7, imageQuery: "Bergen from Fløyen view Bryggen", explicitPhoto: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Bergen_from_Floyen_1.jpg/640px-Bergen_from_Floyen_1.jpg", fallbackQuery: "Bergen Bryggen view" },
       bryggeloftet: { name: "Bryggeloftet & Stuene", coord: [60.3972, 5.3228], icon: "🍽", type: "food", desc: "Final Bergen lunch before heading to the airport.", gbp: 40, imageQuery: "Bryggen Bergen" }
     };
 
@@ -725,17 +748,11 @@
       localStorage.setItem(storageKey(id, field), value);
     }
 
-    function googleRouteEmbed(day) {
-      const stops = day.stops.map(id => STOPS[id]);
-      const route = stops.map(stop => `${stop.coord[0]},${stop.coord[1]}`).join("/");
-      return `https://maps.google.com/maps?saddr=${encodeURIComponent(stops[0].coord.join(","))}&daddr=${encodeURIComponent(stops.slice(1).map(stop => stop.coord.join(",")).join("+to:"))}&output=embed`;
-    }
-
     function renderStaticMap(day) {
+      const mapId = `route-map-${currentPlan}-${PLANS[currentPlan].days.indexOf(day)}`;
       return `<div class="map">
-        <iframe class="route-map-frame" title="${day.date} route map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${googleRouteEmbed(day)}"></iframe>
-      </div>
-      <p class="map-caption">Embedded Google route map for the day, using the ordered stops below.</p>`;
+        <div class="leaflet-map" id="${mapId}" data-plan="${currentPlan}" data-day="${PLANS[currentPlan].days.indexOf(day)}" role="img" aria-label="${day.date} route map"></div>
+      </div>`;
     }
 
     function renderPlanTabs() {
@@ -814,7 +831,7 @@
                     <div class="stop-desc">${stop.desc}</div>
                     <div class="cost">${formatCost(stop.gbp)}</div>
                   </div>
-                  <img src="${PHOTOS.fallback}" alt="${stop.name}" loading="lazy" data-image-query="${stop.imageQuery || stop.name}">
+                  <img class="stop-photo" alt="${stop.name}" loading="lazy" hidden data-stop-id="${id}" data-image-query="${stop.imageQuery || stop.name}" onerror="handleImageError(this)">
                 </div>`;
               }).join("")}
             </div>
@@ -912,7 +929,10 @@
       if (currentSection === "Bookings") content.innerHTML = renderBookings();
       if (currentSection === "Van Comparison") content.innerHTML = renderVans();
       if (currentSection === "Flights") content.innerHTML = renderFlights();
-      if (currentSection === "Itinerary") loadStopImages();
+      if (currentSection === "Itinerary") {
+        loadStopImages();
+        initRouteMaps();
+      }
     }
 
     const imageCache = new Map();
@@ -925,22 +945,89 @@
         const response = await fetch(searchUrl);
         const data = await response.json();
         const page = data.query && data.query.pages && Object.values(data.query.pages)[0];
-        const src = page && page.thumbnail && page.thumbnail.source ? page.thumbnail.source : PHOTOS.fallback;
+        const src = page && page.thumbnail && page.thumbnail.source ? page.thumbnail.source : null;
         imageCache.set(query, src);
         return src;
       } catch (error) {
-        imageCache.set(query, PHOTOS.fallback);
-        return PHOTOS.fallback;
+        imageCache.set(query, null);
+        return null;
       }
+    }
+
+    async function resolveStopImage(stop) {
+      if (stop.explicitPhoto) return stop.explicitPhoto;
+      return getWikipediaImage(stop.imageQuery || stop.name);
     }
 
     function loadStopImages() {
       document.querySelectorAll("img[data-image-query]").forEach(img => {
-        const query = img.dataset.imageQuery;
-        getWikipediaImage(query).then(src => {
-          if (img.isConnected) img.src = src;
+        const stop = STOPS[img.dataset.stopId];
+        resolveStopImage(stop).then(src => {
+          if (!img.isConnected) return;
+          if (src) {
+            img.src = src;
+            img.hidden = false;
+          } else {
+            hideStopImage(img);
+          }
         });
       });
+    }
+
+    function hideStopImage(img) {
+      const row = img.closest(".stop-row");
+      if (row) row.classList.add("no-image");
+      img.remove();
+    }
+
+    function handleImageError(img) {
+      const stop = STOPS[img.dataset.stopId];
+      if (stop && stop.fallbackQuery && img.dataset.usedFallback !== "true") {
+        img.dataset.usedFallback = "true";
+        getWikipediaImage(stop.fallbackQuery).then(src => {
+          if (!img.isConnected) return;
+          if (src) {
+            img.src = src;
+            img.hidden = false;
+          } else {
+            hideStopImage(img);
+          }
+        });
+        return;
+      }
+      hideStopImage(img);
+    }
+
+    function initRouteMaps() {
+      if (!window.L) return;
+      setTimeout(() => {
+        document.querySelectorAll(".leaflet-map").forEach(el => {
+          if (el.dataset.ready === "true") return;
+          const day = PLANS[el.dataset.plan].days[Number(el.dataset.day)];
+          const stops = day.stops.map(id => STOPS[id]);
+          const coords = stops.map(stop => stop.coord);
+          const map = L.map(el, { scrollWheelZoom: false });
+          L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+          }).on("tileerror", event => {
+            event.tile.style.opacity = "0";
+          }).addTo(map);
+          coords.forEach((coord, index) => {
+            const icon = L.divIcon({
+              html: `<div class="num-marker">${index + 1}</div>`,
+              className: "",
+              iconSize: [30, 30],
+              iconAnchor: [15, 15]
+            });
+            L.marker(coord, { icon }).addTo(map).bindPopup(`<strong>${index + 1}. ${stops[index].name}</strong><br>${stops[index].desc}`);
+          });
+          L.polyline(coords, { color: "#00205B", weight: 5, opacity: 0.9 }).addTo(map);
+          map.fitBounds(coords, { padding: [34, 34], maxZoom: 11 });
+          el.dataset.ready = "true";
+          setTimeout(() => map.invalidateSize(), 80);
+        });
+      }, 0);
     }
 
     function renderAll() {
