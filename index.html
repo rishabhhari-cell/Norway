@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Norway Trip Planner | 25-31 Aug 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest: #1A2E1A;
+      --forest-2: #244322;
+      --parchment: #F5F3EE;
+      --ink: #172016;
+      --muted: #65705f;
+      --line: #ded8cb;
+      --white: #fff;
+      --green: #2f7d46;
+      --navy: #223a5e;
+      --red: #7b2424;
+      --amber: #b7791f;
+      --grey: #737373;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    header {
+      background: var(--forest);
+      color: white;
+      padding: 24px 18px 16px;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      font-family: "Crimson Pro", Georgia, serif;
+      letter-spacing: 0;
+      margin: 0;
+    }
+
+    h1 { font-size: clamp(2rem, 4vw, 4rem); line-height: 0.95; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.35rem; }
+
+    .subtitle {
+      margin: 10px 0 18px;
+      color: #dfe8da;
+      max-width: 760px;
+    }
+
+    .tabs, .section-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .tab-btn, .section-btn, .compare-btn {
+      border: 1px solid rgba(255,255,255,0.25);
+      background: transparent;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      white-space: nowrap;
+      min-height: 42px;
+    }
+
+    .tab-btn.active, .section-btn.active {
+      background: white;
+      color: var(--forest);
+      border-color: white;
+      font-weight: 700;
+    }
+
+    main { padding: 18px 0 42px; }
+
+    .plan-intro {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .plan-meta {
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .compare-btn {
+      background: var(--forest);
+      border-color: var(--forest);
+      color: white;
+    }
+
+    .panel, .day-card, .booking-table-wrap, .flight-card, .comparison-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 1px 0 rgba(26,46,26,0.06);
+    }
+
+    .section-shell {
+      background: var(--forest);
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    .content-layout {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .content-layout.full-width {
+      grid-template-columns: 1fr;
+    }
+
+    .day-toc {
+      position: sticky;
+      top: 12px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      box-shadow: 0 1px 0 rgba(26,46,26,0.06);
+    }
+
+    .day-toc[hidden] {
+      display: none;
+    }
+
+    .day-toc-title {
+      font-family: "Crimson Pro", Georgia, serif;
+      color: var(--forest);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .day-toc a {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      min-height: 34px;
+      border-radius: 7px;
+      padding: 6px 8px;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .day-toc a:hover,
+    .day-toc a:focus {
+      background: #edf3ea;
+      color: var(--forest);
+      outline: none;
+    }
+
+    .toc-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      background: var(--forest);
+      color: white;
+      flex: 0 0 auto;
+      font-size: 0.78rem;
+    }
+
+    #content {
+      min-width: 0;
+    }
+
+    .day-card {
+      margin-bottom: 12px;
+      overflow: hidden;
+      scroll-margin-top: 12px;
+    }
+
+    .day-head {
+      background: white;
+      color: var(--ink);
+      text-align: left;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: #edf3ea;
+      color: var(--forest);
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .day-body {
+      padding: 0 14px 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .map {
+      height: 360px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      margin: 14px 0;
+      background: #e8eadf;
+    }
+
+    .route-map-frame {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: 0;
+    }
+
+    .map-caption {
+      margin: -6px 0 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .stop-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stop-row {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 202px;
+    }
+
+    .stop-title {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .stop-desc {
+      color: #354032;
+      margin-bottom: 5px;
+    }
+
+    .cost {
+      font-weight: 800;
+      color: var(--forest);
+      font-size: 0.92rem;
+    }
+
+    .stop-row img {
+      width: 260px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f4f1e8;
+    }
+
+    .stop-row img.broken {
+      object-fit: contain;
+      padding: 10px;
+    }
+
+    .flight-note {
+      margin: 12px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fbfaf7;
+    }
+
+    .flight-note summary {
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--forest);
+    }
+
+    .flight-note-content {
+      padding: 0 12px 12px;
+      color: #303a2e;
+    }
+
+    .booking-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .progress {
+      height: 12px;
+      background: #e8e2d5;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--green);
+      transition: width 180ms ease;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+      table-layout: auto;
+    }
+
+    th, td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--forest);
+      background: #f9f7f2;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .booking-table-wrap {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .booking-table-wrap table {
+      min-width: 100%;
+    }
+
+    select {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 7px 9px;
+      background: white;
+      color: var(--ink);
+      min-width: 132px;
+      font: inherit;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      color: white;
+      font-weight: 800;
+      padding: 4px 9px;
+      min-width: 86px;
+      margin-top: 6px;
+      font-size: 0.83rem;
+    }
+
+    .pill.unassigned, .pill.not-started { background: var(--grey); }
+    .pill.rish, .pill.booked { background: var(--green); }
+    .pill.ben { background: var(--navy); }
+    .pill.sujit { background: var(--red); }
+    .pill.in-progress { background: var(--amber); color: #231800; }
+
+    a { color: var(--forest-2); font-weight: 800; }
+
+    .callout {
+      margin: 14px 0;
+      padding: 12px 14px;
+      background: #fff7e6;
+      border: 1px solid #e7c46f;
+      border-radius: 8px;
+      color: #3f2c00;
+      font-weight: 700;
+    }
+
+    .van-note {
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    .flight-grid, .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .flight-card, .comparison-card {
+      padding: 16px;
+    }
+
+    .flight-card ul, .comparison-card ul {
+      padding-left: 20px;
+      margin: 8px 0 0;
+    }
+
+    .matrix {
+      margin-top: 18px;
+    }
+
+    .ok { color: var(--green); font-weight: 900; }
+    .no { color: #b42318; font-weight: 900; }
+
+    #compareView {
+      display: none;
+      margin-bottom: 18px;
+    }
+
+    #compareView.open { display: block; }
+
+    .compare-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @media (max-width: 820px) {
+      .plan-intro, .booking-top, .day-head {
+        grid-template-columns: 1fr;
+      }
+
+      .badges { justify-content: flex-start; }
+      .flight-grid, .compare-grid { grid-template-columns: 1fr; }
+      .content-layout { grid-template-columns: 1fr; }
+      .day-toc {
+        position: static;
+        grid-template-columns: repeat(7, minmax(88px, 1fr));
+        overflow-x: auto;
+      }
+      .day-toc-title {
+        grid-column: 1 / -1;
+      }
+
+      th, td {
+        min-width: 130px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .stop-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stop-row img {
+        width: 100%;
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Norway Trip Planner</h1>
+      <p class="subtitle">Rish, Ben and Sujit. Bergen-based motorhome trip, 25-31 Aug 2026.</p>
+      <nav class="tabs" id="planTabs" aria-label="Plan tabs"></nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="plan-intro">
+        <div>
+          <h2 id="planTitle"></h2>
+          <div class="plan-meta" id="planMeta"></div>
+        </div>
+        <button class="compare-btn" id="compareBtn" type="button">Compare all plans</button>
+      </section>
+
+      <section id="compareView"></section>
+
+      <div class="section-shell">
+        <nav class="section-tabs" id="sectionTabs" aria-label="Section tabs"></nav>
+      </div>
+
+      <div class="content-layout">
+        <aside class="day-toc" id="dayToc" aria-label="Day table of contents"></aside>
+        <section id="content"></section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const GBP_TO_NOK = 13.4;
+
+    function svgData(svg) {
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function fallbackPhoto(label) {
+      return svgData(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" role="img" aria-label="${label}">
+        <rect width="640" height="440" fill="#eef0e8"/>
+        <circle cx="520" cy="84" r="42" fill="#d7bf7a" opacity=".85"/>
+        <path d="M0 292 118 158l82 89 96-137 112 156 92-96 140 141v129H0z" fill="#1A2E1A" opacity=".82"/>
+        <path d="M0 355c114-66 197-58 304-8 118 55 217 47 336-24v117H0z" fill="#F5F3EE" opacity=".94"/>
+        <text x="32" y="402" font-family="system-ui, sans-serif" font-size="24" font-weight="800" fill="#1A2E1A">${label.replace(/&/g, "&amp;")}</text>
+      </svg>`);
+    }
+
+    const PHOTOS = {
+      fallback: fallbackPhoto("Norway")
+    };
+
+    const STOPS = {
+      bergenAirport: { name: "Bergen Airport", coord: [60.2934, 5.2181], icon: "🚗", type: "drive/logistics", desc: "Arrive at Flesland and start the Bergen pickup loop.", gbp: 0, imageQuery: "Bergen Airport Flesland" },
+      kaffemisjonen: { name: "Kaffemisjonen", coord: [60.3920, 5.3246], icon: "☕", type: "coffee", desc: "Bergen coffee stop for a proper first flat white.", gbp: 6, imageQuery: "Kaffemisjonen Bergen" },
+      mcrent: { name: "McRent Bergen", coord: [60.3500, 5.1667], icon: "🚗", type: "drive/logistics", desc: "Collect the motorhome and check Sunday/Monday return details.", gbp: 326, imageQuery: "motorhome Norway campervan" },
+      mcrentReturn: { name: "McRent Bergen return", coord: [60.3500, 5.1667], icon: "🚗", type: "drive/logistics", desc: "Return the motorhome at 09:00 before taking the light rail into Bergen.", gbp: 0, imageQuery: "motorhome Norway campervan" },
+      rema: { name: "Rema 1000 Straume", coord: [60.3600, 5.1800], icon: "🍽", type: "food", desc: "Stock the van with food for breakfasts, lunches and cabin cooking.", gbp: 37, imageQuery: "Rema 1000 Norway store" },
+      steinsdalsfossen: { name: "Steinsdalsfossen", coord: [60.4580, 5.9510], icon: "💧", type: "waterfall", desc: "Walk behind one of Norway's most accessible waterfalls.", gbp: 0, imageQuery: "Steinsdalsfossen" },
+      hardangerCamp: { name: "Hardangerfjord wild camp", coord: [60.1498, 6.1244], icon: "🏕", type: "sleep", desc: "Free fjordside overnight base for the first van night.", gbp: 0, imageQuery: "Hardangerfjord" },
+      oddadalen: { name: "Oddadalen falls", coord: [60.0200, 6.5500], icon: "💧", type: "waterfall", desc: "Follow the waterfall chain south of Odda.", gbp: 0, imageQuery: "Oddadalen waterfalls" },
+      latefossen: { name: "Låtefossen", coord: [59.9898, 6.5333], icon: "💧", type: "waterfall", desc: "Twin falls crashing beside the road in the Odda valley.", gbp: 0, imageQuery: "Låtefossen" },
+      trolltungaCamping: { name: "Trolltunga Camping Odda", coord: [60.0650, 6.5470], icon: "🏕", type: "sleep", desc: "Practical campsite before the Trolltunga hiking day.", gbp: 8, imageQuery: "Odda Norway" },
+      ferskvaren: { name: "Ferskvaren Odda", coord: [60.0694, 6.5463], icon: "🍽", type: "food", desc: "Relaxed dinner in Odda before an early trail start.", gbp: 26, imageQuery: "Odda Norway" },
+      p2: { name: "P2 Skjeggedal", coord: [60.1183, 6.6633], icon: "🚗", type: "drive/logistics", desc: "Parking, toll and shuttle staging for Trolltunga.", gbp: 24.33, imageQuery: "Trolltunga Norway" },
+      trolltunga: { name: "Trolltunga", coord: [60.1242, 6.7397], icon: "🚣", type: "activity", desc: "The 20 km hike to Norway's famous rock ledge.", gbp: 0, imageQuery: "Trolltunga Norway" },
+      glacierRestaurant: { name: "Glacier Restaurant Odda", coord: [60.0700, 6.5467], icon: "🍽", type: "food", desc: "Post-hike dinner back in Odda.", gbp: 26, imageQuery: "Odda Norway" },
+      treBror: { name: "Tre Brør Kafé Voss", coord: [60.6279, 6.4155], icon: "☕", type: "coffee", desc: "Coffee break in Voss on the way to the fjords.", gbp: 6, imageQuery: "Voss Norway" },
+      nordicVentures: { name: "Nærøyfjord / Nordic Ventures Gudvangen", coord: [60.8799, 6.8437], icon: "🚣", type: "activity", desc: "Full-day Nærøyfjord kayak tour with BBQ included.", gbp: 66, imageQuery: "Nærøyfjord Gudvangen kayak" },
+      flamCamping: { name: "Flåm Marina Camping", coord: [60.8633, 7.1167], icon: "🏕", type: "sleep", desc: "Convenient Flåm campsite after kayaking.", gbp: 9, imageQuery: "Flåm Norway fjord" },
+      aegir: { name: "Ægir Brewpub Flåm", coord: [60.8627, 7.1155], icon: "🍽", type: "food", desc: "Big Viking-style dinner in Flåm.", gbp: 45, imageQuery: "Ægir Brewpub Flåm" },
+      flamBakeri: { name: "Flåm Bakeri", coord: [60.8625, 7.1160], icon: "☕", type: "coffee", desc: "Coffee and pastries before the next fjord drive.", gbp: 6, imageQuery: "Flåm Norway fjord" },
+      stegastein: { name: "Stegastein viewpoint", coord: [60.9086, 7.2121], icon: "👁", type: "viewpoint", desc: "Aurlandsfjord viewpoint 650 metres above the water.", gbp: 0, imageQuery: "Stegastein viewpoint" },
+      fretheim: { name: "Fretheim Fjordhytter", coord: [60.8620, 7.1130], icon: "🏕", type: "sleep", desc: "Waterfront cabin night with boat, shower and wood stove.", gbp: 101, imageQuery: "Flåm Norway fjord" },
+      voringsfossen: { name: "Vøringsfossen", coord: [60.4042, 7.2114], icon: "💧", type: "waterfall", desc: "182 m waterfall stop with dramatic viewing platforms.", gbp: 7, imageQuery: "Vøringsfossen" },
+      sogndal: { name: "Sogndal", coord: [61.2292, 7.0983], icon: "🚗", type: "drive/logistics", desc: "Sognefjord crossing via Mannheller-Fodnes ferry.", gbp: 11, imageQuery: "Sogndal Sognefjord" },
+      stryn: { name: "Stryn", coord: [61.9046, 6.7292], icon: "👁", type: "viewpoint", desc: "Glacier-view detour through classic west Norway scenery.", gbp: 0, imageQuery: "Stryn Norway glacier" },
+      geirangerRoad: { name: "Geiranger / Eagle Road", coord: [62.0833, 7.2667], icon: "👁", type: "viewpoint", desc: "Eagle Road and Dalsnibba viewpoint toll above Geiranger.", gbp: 5, imageQuery: "Geirangerfjord Eagle Road" },
+      geirangerKayak: { name: "Geiranger Kayak Centre", coord: [62.1017, 7.2050], icon: "🚣", type: "activity", desc: "Four-hour Seven Sisters kayak on Geirangerfjord.", gbp: 93, imageQuery: "Seven Sisters waterfall Geirangerfjord" },
+      hellesylt: { name: "Wild camp Hellesylt", coord: [62.0865, 6.8711], icon: "🏕", type: "sleep", desc: "Free overnight near Hellesylt after the Geiranger push.", gbp: 0, imageQuery: "Hellesylt Norway" },
+      trollstigen: { name: "Trollstigen", coord: [62.4598, 7.6700], icon: "👁", type: "viewpoint", desc: "Drive the 11 hairpin bends of Trollstigen.", gbp: 0, imageQuery: "Trollstigen Norway" },
+      trollvegen: { name: "Trollvegen", coord: [62.4714, 7.7194], icon: "👁", type: "viewpoint", desc: "Viewpoint beneath Europe's tallest vertical rock wall.", gbp: 0, imageQuery: "Trollveggen Norway" },
+      bergenshallen: { name: "Bergenshallen parking", coord: [60.3625, 5.3640], icon: "🏕", type: "sleep", desc: "Motorhome parking in Bergen for the final night.", gbp: 9, imageQuery: "Bergen Norway motorhome" },
+      bryggen: { name: "Bryggen / Fløibanen", coord: [60.3983, 5.3260], icon: "👁", type: "viewpoint", desc: "Bryggen walk, fish market and funicular views.", gbp: 7, imageQuery: "Bryggen Bergen Fløibanen" },
+      bryggeloftet: { name: "Bryggeloftet & Stuene", coord: [60.3972, 5.3228], icon: "🍽", type: "food", desc: "Final Bergen lunch before heading to the airport.", gbp: 40, imageQuery: "Bryggen Bergen" }
+    };
+
+    const flightNotes = {
+      day6A: "<strong>DY1316 (06:50):</strong> Leave Åndalsnes by 17:00, Bergen by 20:30, arrange McRent key drop, alarm 03:30.<br><strong>DY1318 (19:10):</strong> drive at leisure, return van Mon 09:00, light rail to city.",
+      day6B: "<strong>DY1316:</strong> Leave Vøringsfossen around 17:00, Bergen around 19:30, key drop arranged, alarm 03:30.<br><strong>DY1318:</strong> easy morning at Vøringsfossen, drive back, return van Mon 09:00.",
+      day7: "<strong>DY1318 only:</strong> Return van McRent 09:00, spend the day in Bergen, and reach the airport by 16:30."
+    };
+
+    const sharedDays = {
+      day1: { date: "Tue 25 Aug", label: "Arrive Bergen and Hardangerfjord", drive: "2.5hrs", stops: ["bergenAirport", "kaffemisjonen", "mcrent", "rema", "steinsdalsfossen", "hardangerCamp"] },
+      day2: { date: "Wed 26 Aug", label: "Odda waterfalls", drive: "1hr", stops: ["oddadalen", "latefossen", "trolltungaCamping", "ferskvaren"] },
+      day3: { date: "Thu 27 Aug", label: "Trolltunga hike", drive: "0.5hrs", stops: ["p2", "trolltunga", "glacierRestaurant"] },
+      day4A: { date: "Fri 28 Aug", label: "Voss, Nærøyfjord kayak and Flåm", drive: "2.5hrs", stops: ["treBror", "nordicVentures", "flamCamping", "aegir"] },
+      day7: { date: "Mon 31 Aug", label: "Bergen final day", drive: "City", flightNote: flightNotes.day7, stops: ["mcrentReturn", "kaffemisjonen", "bryggen", "bryggeloftet", "bergenAirport"] }
+    };
+
+    const PLANS = {
+      A: {
+        name: "Plan A",
+        title: "Plan A — Full Loop",
+        tagline: "Both fjords kayaked + Trollstigen",
+        total: "~£820pp",
+        flight: "Requires DY1318",
+        days: [
+          sharedDays.day1,
+          sharedDays.day2,
+          sharedDays.day3,
+          sharedDays.day4A,
+          { date: "Sat 29 Aug", label: "Sogndal, Stryn and Seven Sisters kayak", drive: "4.5hrs", stops: ["sogndal", "stryn", "geirangerRoad", "geirangerKayak", "hellesylt"] },
+          { date: "Sun 30 Aug", label: "Trollstigen to Bergen", drive: "4.5hrs", flightNote: flightNotes.day6A, stops: ["trollstigen", "trollvegen", "bergenshallen"] },
+          sharedDays.day7
+        ],
+        summary: {
+          activities: ["Nærøyfjord kayak", "Seven Sisters kayak", "Trolltunga", "Trollstigen"],
+          pros: ["Biggest scenic loop", "Maximum fjord time", "Includes both marquee kayak days"],
+          cons: ["Most driving", "Needs DY1318", "Tightest Saturday/Sunday pacing"]
+        }
+      },
+      B: {
+        name: "Plan B",
+        title: "Plan B — Southern Focus",
+        tagline: "Nærøyfjord kayak only, most relaxed",
+        total: "~£630pp DY1316 / £680pp DY1318",
+        flight: "Works with either flight",
+        days: [
+          sharedDays.day1,
+          sharedDays.day2,
+          sharedDays.day3,
+          sharedDays.day4A,
+          { date: "Sat 29 Aug", label: "Flåm, Stegastein and hytte night", drive: "0.5hrs", stops: ["flamBakeri", "stegastein", "fretheim"] },
+          { date: "Sun 30 Aug", label: "Vøringsfossen and Bergen return", drive: "3hrs", flightNote: flightNotes.day6B, stops: ["voringsfossen", "bergenshallen"] },
+          sharedDays.day7
+        ],
+        summary: {
+          activities: ["Nærøyfjord kayak", "Trolltunga", "Stegastein", "Vøringsfossen", "Fretheim hytte"],
+          pros: ["Most relaxed", "Cheapest", "Works with early or late flight"],
+          cons: ["No Geiranger", "No Trollstigen", "Only one kayak day"]
+        }
+      },
+      C: {
+        name: "Plan C",
+        title: "Plan C — Geiranger Focus",
+        tagline: "Seven Sisters kayak, no Nærøyfjord",
+        total: "~£800pp",
+        flight: "Requires DY1318",
+        days: [
+          sharedDays.day1,
+          sharedDays.day2,
+          sharedDays.day3,
+          { date: "Fri 28 Aug", label: "Voss, Stegastein, Flåm hytte and Ægir", drive: "4hrs", stops: ["treBror", "stegastein", "fretheim", "aegir"] },
+          { date: "Sat 29 Aug", label: "Sogndal, Stryn and Seven Sisters kayak", drive: "4hrs", stops: ["flamBakeri", "sogndal", "stryn", "geirangerRoad", "geirangerKayak", "hellesylt"] },
+          { date: "Sun 30 Aug", label: "Trollstigen to Bergen", drive: "4.5hrs", flightNote: flightNotes.day6A, stops: ["trollstigen", "trollvegen", "bergenshallen"] },
+          sharedDays.day7
+        ],
+        summary: {
+          activities: ["Seven Sisters kayak", "Trolltunga", "Stegastein", "Trollstigen", "Fretheim hytte"],
+          pros: ["Geiranger focus", "Keeps Trollstigen", "Includes cabin night"],
+          cons: ["No Nærøyfjord kayak", "Long transit days", "Needs DY1318"]
+        }
+      }
+    };
+
+    const BOOKING_GROUPS = {
+      shared: [
+        ["Motorhome rental 6 nights", "Book immediately — peak Aug", "£200pp", "https://www.campervannorway.com/motorhome-bergen", "Compare 4 companies in van tab. Call McRent re Sunday drop if choosing them."],
+        ["Trolltunga P2→P3 shuttles Thu 27 Aug", "Book 3–4 weeks out", "£19pp", "https://www.trolltunganorway.com/", ""],
+        ["⚠️ Call McRent Bergen re Sunday key drop", "Before booking van", "£0", "tel:+4745871963", "Phone: +47 458 71 963"]
+      ],
+      AB: [
+        ["Nordic Ventures Nærøyfjord Day Kayak Fri 28 Aug", "Book 6–8 weeks out", "£66pp", "https://nordicventures.com/norway-tours/naeroyfjord-norway-day-tour/", ""],
+        ["Ægir Brewpub dinner reservation Fri 28 Aug", "Book 2–3 weeks out", "£45pp", "https://en.flamsbrygga.no/aegir-bryggeripub", ""]
+      ],
+      AC: [
+        ["Geiranger Kayak Centre Seven Sisters Sat 29 Aug", "Book 4–6 weeks out", "£93pp", "https://www.geirangerfjord.no/the-seven-sister-tour-2", ""],
+        ["DY1318 flight Mon 31 Aug 19:10", "Book now", "£0 (variable)", "https://www.norwegian.com", ""]
+      ],
+      BC: [
+        ["Fretheim Fjordhytter 1 night", "Book 4–6 weeks out", "£101pp", "https://www.fretheimhytter.com/booking", "Email: f-fjord@online.no Tel: +47 91 72 79 69"]
+      ],
+      B: [
+        ["Flight choice DY1316 or DY1318", "Book now", "£0 (variable)", "https://www.norwegian.com", ""]
+      ]
+    };
+
+    const VANS = [
+      ["McRent Bergen", "Family Standard 4-berth", "4", "✓", "✓", "£978", "£326", "10 nights", "5 nights ✓", "Needs arranging — call first", "4.3★", "https://www.mcrent.eu/"],
+      ["Campervan Norway", "Sunlight T67 Homey 4-berth", "4", "✓", "✓", "£1,556", "£519", "None", "None ✓", "Flexible ✓", "4.5★", "https://www.campervannorway.com/motorhome-bergen"],
+      ["Roadsurfer Bergen", "Standard RV 4-berth", "4", "✓", "✓", "£1,333", "£444", "None", "None ✓", "Flexible ✓", "4.4★", "https://roadsurfer.com/"],
+      ["Fjord Campers", "VW High Roof 3-berth", "3", "✗", "✗", "£800", "£267", "None", "None ✓", "Flexible ✓", "4.8★", "https://fjordcampers.no/"]
+    ];
+
+    const sections = ["Itinerary", "Bookings", "Van Comparison", "Flights"];
+    let currentPlan = "A";
+    let currentSection = "Itinerary";
+    function formatCost(gbp) {
+      const nok = Math.round(gbp * GBP_TO_NOK);
+      return gbp === 0 ? "Free / £0" : `NOK ${nok.toLocaleString("en-GB")} / £${Number(gbp).toLocaleString("en-GB", { maximumFractionDigits: 2 })}pp`;
+    }
+
+    function dayTotal(day) {
+      return day.stops.reduce((sum, id) => sum + (STOPS[id].gbp || 0), 0);
+    }
+
+    function bookingRows(planKey) {
+      const rows = [...BOOKING_GROUPS.shared];
+      if (["A", "B"].includes(planKey)) rows.push(...BOOKING_GROUPS.AB);
+      if (["A", "C"].includes(planKey)) rows.push(...BOOKING_GROUPS.AC);
+      if (["B", "C"].includes(planKey)) rows.push(...BOOKING_GROUPS.BC);
+      if (planKey === "B") rows.push(...BOOKING_GROUPS.B);
+      return rows.map((row, idx) => ({ id: `${planKey}-${idx}-${row[0].replace(/\W+/g, "-")}`, task: row[0], deadline: row[1], cost: row[2], link: row[3], note: row[4] }));
+    }
+
+    function storageKey(id, field) {
+      return `norway-trip:${id}:${field}`;
+    }
+
+    function getStored(id, field, fallback) {
+      return localStorage.getItem(storageKey(id, field)) || fallback;
+    }
+
+    function setStored(id, field, value) {
+      localStorage.setItem(storageKey(id, field), value);
+    }
+
+    function googleRouteEmbed(day) {
+      const stops = day.stops.map(id => STOPS[id]);
+      const route = stops.map(stop => `${stop.coord[0]},${stop.coord[1]}`).join("/");
+      return `https://maps.google.com/maps?saddr=${encodeURIComponent(stops[0].coord.join(","))}&daddr=${encodeURIComponent(stops.slice(1).map(stop => stop.coord.join(",")).join("+to:"))}&output=embed`;
+    }
+
+    function renderStaticMap(day) {
+      return `<div class="map">
+        <iframe class="route-map-frame" title="${day.date} route map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${googleRouteEmbed(day)}"></iframe>
+      </div>
+      <p class="map-caption">Embedded Google route map for the day, using the ordered stops below.</p>`;
+    }
+
+    function renderPlanTabs() {
+      document.getElementById("planTabs").innerHTML = Object.entries(PLANS).map(([key, plan]) =>
+        `<button type="button" class="tab-btn ${key === currentPlan ? "active" : ""}" data-plan="${key}">${plan.name}</button>`
+      ).join("");
+    }
+
+    function renderSectionTabs() {
+      document.getElementById("sectionTabs").innerHTML = sections.map(section =>
+        `<button type="button" class="section-btn ${section === currentSection ? "active" : ""}" data-section="${section}">${section}</button>`
+      ).join("");
+    }
+
+    function renderIntro() {
+      const plan = PLANS[currentPlan];
+      document.getElementById("planTitle").textContent = plan.title;
+      document.getElementById("planMeta").textContent = `${plan.tagline}. ${plan.flight}. ${plan.total}.`;
+    }
+
+    function renderCompare() {
+      const root = document.getElementById("compareView");
+      root.innerHTML = `<div class="compare-grid">${Object.values(PLANS).map(plan => `
+        <article class="comparison-card">
+          <h3>${plan.title}</h3>
+          <p><strong>${plan.tagline}</strong></p>
+          <p><strong>Total:</strong> ${plan.total}<br><strong>Flight:</strong> ${plan.flight}</p>
+          <p><strong>Key activities:</strong> ${plan.summary.activities.join(", ")}</p>
+          <p><strong>Pros:</strong></p>
+          <ul>${plan.summary.pros.map(item => `<li>${item}</li>`).join("")}</ul>
+          <p><strong>Cons:</strong></p>
+          <ul>${plan.summary.cons.map(item => `<li>${item}</li>`).join("")}</ul>
+        </article>`).join("")}</div>`;
+    }
+
+    function renderDayToc() {
+      const layout = document.querySelector(".content-layout");
+      const toc = document.getElementById("dayToc");
+      if (currentSection !== "Itinerary") {
+        toc.hidden = true;
+        toc.innerHTML = "";
+        layout.classList.add("full-width");
+        return;
+      }
+
+      layout.classList.remove("full-width");
+      toc.hidden = false;
+      toc.innerHTML = `<div class="day-toc-title">Days</div>${PLANS[currentPlan].days.map((day, index) =>
+        `<a href="#day-${currentPlan}-${index + 1}"><span class="toc-num">${index + 1}</span><span>${day.date.replace(" Aug", "")}</span></a>`
+      ).join("")}`;
+    }
+
+    function renderItinerary() {
+      const plan = PLANS[currentPlan];
+      return plan.days.map((day, index) => {
+        const total = dayTotal(day);
+        return `<article class="day-card" id="day-${currentPlan}-${index + 1}" data-day="${index}">
+          <div class="day-head">
+            <div>
+              <h3>${day.date}: ${day.label}</h3>
+            </div>
+            <div class="badges">
+              <span class="badge">Drive ${day.drive}</span>
+              <span class="badge">£${Math.round(total)} day cost</span>
+            </div>
+          </div>
+          <div class="day-body">
+            ${renderStaticMap(day)}
+            ${day.flightNote ? `<details class="flight-note"><summary>✈ Flight options</summary><div class="flight-note-content">${day.flightNote}</div></details>` : ""}
+            <div class="stop-list">
+              ${day.stops.map(id => {
+                const stop = STOPS[id];
+                return `<div class="stop-row">
+                  <div>
+                    <div class="stop-title">${stop.icon} ${stop.name} <span class="plan-meta">(${stop.type})</span></div>
+                    <div class="stop-desc">${stop.desc}</div>
+                    <div class="cost">${formatCost(stop.gbp)}</div>
+                  </div>
+                  <img src="${PHOTOS.fallback}" alt="${stop.name}" loading="lazy" data-image-query="${stop.imageQuery || stop.name}">
+                </div>`;
+              }).join("")}
+            </div>
+          </div>
+        </article>`;
+      }).join("");
+    }
+
+    function renderBookings() {
+      const rows = bookingRows(currentPlan);
+      const booked = rows.filter(row => getStored(row.id, "status", "Not started") === "Booked").length;
+      return `<div class="booking-top">
+        <div>
+          <h3>Booking progress</h3>
+          <div class="progress" aria-label="${booked} of ${rows.length} items booked"><span style="width:${(booked / rows.length) * 100}%"></span></div>
+        </div>
+        <strong>${booked}/${rows.length} items booked</strong>
+      </div>
+      <div class="booking-table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th>Deadline</th><th>Cost (pp)</th><th>Assignee</th><th>Status</th><th>Link</th></tr></thead>
+          <tbody>${rows.map(row => {
+            const assignee = getStored(row.id, "assignee", "Unassigned");
+            const status = getStored(row.id, "status", "Not started");
+            return `<tr>
+              <td><strong>${row.task}</strong>${row.note ? `<br><span class="plan-meta">${row.note}</span>` : ""}</td>
+              <td>${row.deadline}</td>
+              <td>${row.cost}</td>
+              <td>
+                <select data-booking="${row.id}" data-field="assignee">
+                  ${["Unassigned", "Rish", "Ben", "Sujit"].map(name => `<option ${assignee === name ? "selected" : ""}>${name}</option>`).join("")}
+                </select>
+                <div class="pill ${assignee.toLowerCase()}">${assignee}</div>
+              </td>
+              <td>
+                <select data-booking="${row.id}" data-field="status">
+                  ${["Not started", "In progress", "Booked"].map(name => `<option ${status === name ? "selected" : ""}>${name}</option>`).join("")}
+                </select>
+                <div class="pill ${status.toLowerCase().replace(/\s+/g, "-")}">${status}</div>
+              </td>
+              <td><a href="${row.link}" target="_blank" rel="noopener">Open</a></td>
+            </tr>`;
+          }).join("")}</tbody>
+        </table>
+      </div>`;
+    }
+
+    function renderVans() {
+      return `<div class="callout">⚠️ If choosing McRent and DY1316 flight — call +47 458 71 963 before booking to confirm Sunday evening key drop policy.</div>
+      <div class="booking-table-wrap">
+        <table>
+          <thead><tr>${["Company", "Vehicle", "Sleeps", "Shower", "Toilet", "Est. 6 nights total", "Est. per person", "Min nights (peak)", "Min nights (Aug 25–31)", "Sunday drop", "Rating", "Book"].map(h => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>${VANS.map(row => `<tr>${row.map((cell, idx) => idx === 11 ? `<td><a href="${cell}" target="_blank" rel="noopener">${new URL(cell).hostname.replace("www.", "")}</a></td>` : `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+        </table>
+      </div>
+      <p class="van-note">Fjord Campers has no shower/toilet — uses campsite facilities. Cheapest option and highest rated. All prices estimated at NOK/GBP Aug 2026 rate.</p>`;
+    }
+
+    function renderFlights() {
+      return `<div class="flight-grid">
+        <article class="flight-card">
+          <h3>DY1316</h3>
+          <p><strong>Departs:</strong> 06:50<br><strong>Arrives LGW:</strong> 08:05<br><strong>Airport by:</strong> 05:00<br><strong>Leave camp:</strong> 03:30</p>
+          <p><strong>Pros:</strong></p>
+          <ul><li>Cheaper, approx. half price</li><li>Home by morning</li></ul>
+          <p><strong>Cons:</strong></p>
+          <ul><li>03:30 alarm</li><li>Last evening wasted</li><li>McRent Sunday drop needs pre-arranging</li><li>Plans A & C extremely difficult</li></ul>
+          <p><strong>Works well with:</strong> Plan B only.</p>
+        </article>
+        <article class="flight-card">
+          <h3>DY1318</h3>
+          <p><strong>Departs:</strong> 19:10<br><strong>Arrives LGW:</strong> 20:10<br><strong>Airport by:</strong> 17:30<br><strong>Leave camp:</strong> 16:00</p>
+          <p><strong>Pros:</strong></p>
+          <ul><li>Full final day in Bergen</li><li>Kaffemisjonen flat white</li><li>Bryggeloftet lunch</li><li>McRent opens 09:00 Mon</li><li>Plans A & C require this</li></ul>
+          <p><strong>Cons:</strong></p>
+          <ul><li>Approx. double the price</li><li>Later home</li></ul>
+          <p><strong>Works well with:</strong> Plans A, B and C.</p>
+        </article>
+      </div>
+      <div class="booking-table-wrap matrix">
+        <table>
+          <thead><tr><th>Plan</th><th>DY1316</th><th>DY1318</th></tr></thead>
+          <tbody>
+            <tr><td>Plan A</td><td class="no">✗</td><td class="ok">✓</td></tr>
+            <tr><td>Plan B</td><td class="ok">✓</td><td class="ok">✓</td></tr>
+            <tr><td>Plan C</td><td class="no">✗</td><td class="ok">✓</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+    }
+
+    function renderContent() {
+      const content = document.getElementById("content");
+      if (currentSection === "Itinerary") content.innerHTML = renderItinerary();
+      if (currentSection === "Bookings") content.innerHTML = renderBookings();
+      if (currentSection === "Van Comparison") content.innerHTML = renderVans();
+      if (currentSection === "Flights") content.innerHTML = renderFlights();
+      if (currentSection === "Itinerary") loadStopImages();
+    }
+
+    const imageCache = new Map();
+
+    async function getWikipediaImage(query) {
+      if (imageCache.has(query)) return imageCache.get(query);
+      const api = "https://en.wikipedia.org/w/api.php";
+      const searchUrl = `${api}?origin=*&action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&gsrlimit=1&prop=pageimages&piprop=thumbnail&pithumbsize=900&format=json`;
+      try {
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+        const page = data.query && data.query.pages && Object.values(data.query.pages)[0];
+        const src = page && page.thumbnail && page.thumbnail.source ? page.thumbnail.source : PHOTOS.fallback;
+        imageCache.set(query, src);
+        return src;
+      } catch (error) {
+        imageCache.set(query, PHOTOS.fallback);
+        return PHOTOS.fallback;
+      }
+    }
+
+    function loadStopImages() {
+      document.querySelectorAll("img[data-image-query]").forEach(img => {
+        const query = img.dataset.imageQuery;
+        getWikipediaImage(query).then(src => {
+          if (img.isConnected) img.src = src;
+        });
+      });
+    }
+
+    function renderAll() {
+      renderPlanTabs();
+      renderSectionTabs();
+      renderIntro();
+      renderCompare();
+      renderDayToc();
+      renderContent();
+    }
+
+    document.addEventListener("click", event => {
+      const planBtn = event.target.closest("[data-plan]");
+      if (planBtn) {
+        currentPlan = planBtn.dataset.plan;
+        renderAll();
+        return;
+      }
+
+      const sectionBtn = event.target.closest("[data-section]");
+      if (sectionBtn) {
+        currentSection = sectionBtn.dataset.section;
+        renderAll();
+        return;
+      }
+
+      if (event.target.id === "compareBtn") {
+        document.getElementById("compareView").classList.toggle("open");
+      }
+    });
+
+    document.addEventListener("change", event => {
+      const select = event.target.closest("select[data-booking]");
+      if (!select) return;
+      setStored(select.dataset.booking, select.dataset.field, select.value);
+      renderContent();
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
