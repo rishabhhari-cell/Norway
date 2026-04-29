@@ -475,6 +475,10 @@
       padding: 16px;
     }
 
+    .flight-card.inbound {
+      grid-column: 1 / -1;
+    }
+
     .flight-card ul, .comparison-card ul {
       padding-left: 20px;
       margin: 8px 0 0;
@@ -709,10 +713,10 @@
     };
 
     const VANS = [
-      ["McRent Bergen", "Family Standard 4-berth", "4", "✓", "✓", "£978", "£326", "10 nights", "5 nights ✓", "Needs arranging — call first", "4.3★", "https://www.mcrent.eu/"],
-      ["Campervan Norway", "Sunlight T67 Homey 4-berth", "4", "✓", "✓", "£1,556", "£519", "None", "None ✓", "Flexible ✓", "4.5★", "https://www.campervannorway.com/motorhome-bergen"],
-      ["Roadsurfer Bergen", "Standard RV 4-berth", "4", "✓", "✓", "£1,333", "£444", "None", "None ✓", "Flexible ✓", "4.4★", "https://roadsurfer.com/"],
-      ["Fjord Campers", "VW High Roof 3-berth", "3", "✗", "✗", "£800", "£267", "None", "None ✓", "Flexible ✓", "4.8★", "https://fjordcampers.no/"]
+      ["McRent Bergen", "Family Standard 4-berth", "4", "✓", "✓", "Not verified", "Not verified", "£978", "£326", "10 nights", "5 nights ✓", "Needs arranging — call first", "4.3★", "https://www.mcrent.eu/"],
+      ["Campervan Norway", "Sunlight T67 Homey 4-berth", "4", "✓", "✓", "Not verified", "Not verified", "£1,556", "£519", "None", "None ✓", "Flexible ✓", "4.5★", "https://www.campervannorway.com/motorhome-bergen"],
+      ["Roadsurfer Bergen", "Standard RV 4-berth", "4", "✓", "✓", "Not verified", "Not verified", "£1,333", "£444", "None", "None ✓", "Flexible ✓", "4.4★", "https://roadsurfer.com/"],
+      ["Fjord Campers", "High Roof Manual 3-berth", "3", "✗", "Optional portable", "2,290 NOK", "£171", "£1,025", "£342", "5 nights", "5 nights ✓", "Flexible ✓", "4.8★", "https://www.fjordcampers.no/rent-camper-van/?ssid=vFxDd0CGoud0"]
     ];
 
     const sections = ["Itinerary", "Bookings", "Van Comparison", "Flights"];
@@ -883,15 +887,20 @@
       return `<div class="callout">⚠️ If choosing McRent and DY1316 flight — call +47 458 71 963 before booking to confirm Sunday evening key drop policy.</div>
       <div class="booking-table-wrap">
         <table>
-          <thead><tr>${["Company", "Vehicle", "Sleeps", "Shower", "Toilet", "Est. 6 nights total", "Est. per person", "Min nights (peak)", "Min nights (Aug 25–31)", "Sunday drop", "Rating", "Book"].map(h => `<th>${h}</th>`).join("")}</tr></thead>
-          <tbody>${VANS.map(row => `<tr>${row.map((cell, idx) => idx === 11 ? `<td><a href="${cell}" target="_blank" rel="noopener">${new URL(cell).hostname.replace("www.", "")}</a></td>` : `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+          <thead><tr>${["Company", "Vehicle", "Sleeps", "Shower", "Toilet", "Cost NOK/day", "Cost GBP/day", "Est. 6 nights total", "Est. per person", "Min nights (peak)", "Min nights (Aug 25–31)", "Sunday drop", "Rating", "Book"].map(h => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>${VANS.map(row => `<tr>${row.map((cell, idx) => idx === 13 ? `<td><a href="${cell}" target="_blank" rel="noopener">${new URL(cell).hostname.replace("www.", "")}</a></td>` : `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
         </table>
       </div>
-      <p class="van-note">Fjord Campers has no shower/toilet — uses campsite facilities. Cheapest option and highest rated. All prices estimated at NOK/GBP Aug 2026 rate.</p>`;
+      <p class="van-note">Fjord Campers public High Roof Manual summer price is listed as 2,290 NOK/night; GBP uses the planner rate of 13.4 NOK/GBP. Other daily rates still need checkout verification.</p>`;
     }
 
     function renderFlights() {
       return `<div class="flight-grid">
+        <article class="flight-card inbound">
+          <h3>DY1317 inbound</h3>
+          <p><strong>Date:</strong> Tue 25 Aug<br><strong>Departs LGW:</strong> 08:45<br><strong>Arrives Bergen:</strong> 11:40</p>
+          <p><strong>Trip role:</strong> Gets everyone into Bergen in time for coffee, motorhome pickup, food shop, and the Hardangerfjord first-night drive.</p>
+        </article>
         <article class="flight-card">
           <h3>DY1316</h3>
           <p><strong>Departs:</strong> 06:50<br><strong>Arrives LGW:</strong> 08:05<br><strong>Airport by:</strong> 05:00<br><strong>Leave camp:</strong> 03:30</p>
