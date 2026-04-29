@@ -362,6 +362,16 @@
       color: #263247;
     }
 
+    .stay-callout {
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid #F1A5B5;
+      background: var(--pale-red);
+      color: #6F001C;
+      font-weight: 800;
+    }
+
     .booking-top {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -596,13 +606,14 @@
       aegir: { name: "Ægir Brewpub Flåm", coord: [60.8627, 7.1155], icon: "🍽", type: "food", desc: "Big Viking-style dinner in Flåm.", gbp: 45, imageQuery: "Ægir Brewpub Flåm", explicitPhoto: "https://images.squarespace-cdn.com/content/v1/5ec51c0ca5d66b2ba8d8e0bf/1610017284804-4G6V8V0B2WFXT3S8J19U/Aegir%2BBrewPub%2B18%2BThor%2BBrodreskift.jpg", fallbackQuery: "Flåm Norway restaurant" },
       flamBakeri: { name: "Flåm Bakeri", coord: [60.8625, 7.1160], icon: "☕", type: "coffee", desc: "Coffee and pastries before the next fjord drive.", gbp: 6, imageQuery: "Flåm Norway fjord" },
       stegastein: { name: "Stegastein viewpoint", coord: [60.9086, 7.2121], icon: "👁", type: "viewpoint", desc: "Aurlandsfjord viewpoint 650 metres above the water.", gbp: 0, imageQuery: "Stegastein viewpoint" },
-      fretheim: { name: "Fretheim Fjordhytter", coord: [60.8620, 7.1130], icon: "🏕", type: "sleep", desc: "Waterfront cabin night with boat, shower and wood stove.", gbp: 101, imageQuery: "Flåm Norway fjord" },
+      fretheim: { name: "Fretheim Fjordhytter hytte stay", coord: [60.8620, 7.1130], icon: "🏡", type: "sleep", desc: "Waterfront cabin night with boat included, shower, wood stove, and cabin dinner.", gbp: 101, imageQuery: "Flåm Norway fjord cabin", isHytte: true, hytteNote: "Hytte stay: Fretheim Fjordhytter waterfront cabin night, £101pp. Includes boat, shower and wood stove; cook dinner in the cabin." },
       voringsfossen: { name: "Vøringsfossen", coord: [60.4042, 7.2114], icon: "💧", type: "waterfall", desc: "182 m waterfall stop with dramatic viewing platforms.", gbp: 7, imageQuery: "Vøringsfossen" },
       sogndal: { name: "Sogndal", coord: [61.2292, 7.0983], icon: "🚗", type: "drive/logistics", desc: "Sognefjord crossing via Mannheller-Fodnes ferry.", gbp: 11, imageQuery: "Sogndal Sognefjord" },
       stryn: { name: "Stryn", coord: [61.9046, 6.7292], icon: "👁", type: "viewpoint", desc: "Glacier-view detour through classic west Norway scenery.", gbp: 0, imageQuery: "Stryn Norway glacier" },
       geirangerRoad: { name: "Geiranger / Eagle Road", coord: [62.0833, 7.2667], icon: "👁", type: "viewpoint", desc: "Eagle Road and Dalsnibba viewpoint toll above Geiranger.", gbp: 5, imageQuery: "Geirangerfjord Eagle Road", explicitPhoto: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Geiranger_fjord%2C_rainbow.jpg/640px-Geiranger_fjord%2C_rainbow.jpg", fallbackQuery: "Geirangerfjord viewpoint" },
       geirangerKayak: { name: "Geiranger Kayak Centre", coord: [62.1017, 7.2050], icon: "🚣", type: "activity", desc: "Four-hour Seven Sisters kayak on Geirangerfjord.", gbp: 93, imageQuery: "Seven Sisters waterfall Geirangerfjord" },
       hellesylt: { name: "Wild camp Hellesylt", coord: [62.0865, 6.8711], icon: "🏕", type: "sleep", desc: "Free overnight near Hellesylt after the Geiranger push.", gbp: 0, imageQuery: "Hellesylt Norway" },
+      stadheimHytte: { name: "Stadheimfossen Camping & Hytter", coord: [62.07533, 6.89583], icon: "🏡", type: "sleep", desc: "Plan A hytte near Hellesylt: low-season cabin for 3/4 people by the river, close to the Geiranger ferry.", gbp: 14, imageQuery: "Stadheimfossen Camping Hytter Hellesylt cabin", isHytte: true, hytteNote: "Plan A hytte stay: Stadheimfossen Camping & Hytter near Hellesylt. Public low-season cabin price is NOK 550 per cabin, about £14pp for three; linen, towels and shower tokens may be extra." },
       trollstigen: { name: "Trollstigen", coord: [62.4598, 7.6700], icon: "👁", type: "viewpoint", desc: "Drive the 11 hairpin bends of Trollstigen.", gbp: 0, imageQuery: "Trollstigen Norway" },
       trollvegen: { name: "Trollvegen", coord: [62.4714, 7.7194], icon: "👁", type: "viewpoint", desc: "Viewpoint beneath Europe's tallest vertical rock wall.", gbp: 0, imageQuery: "Trollveggen Norway" },
       bergenshallen: { name: "Bergenshallen parking", coord: [60.3625, 5.3640], icon: "🏕", type: "sleep", desc: "Motorhome parking in Bergen for the final night.", gbp: 9, imageQuery: "Bergen Norway motorhome" },
@@ -636,13 +647,13 @@
           sharedDays.day2,
           sharedDays.day3,
           sharedDays.day4A,
-          { date: "Sat 29 Aug", label: "Sogndal, Stryn and Seven Sisters kayak", drive: "4.5hrs", stops: ["sogndal", "stryn", "geirangerRoad", "geirangerKayak", "hellesylt"] },
+          { date: "Sat 29 Aug", label: "Sogndal, Stryn, Seven Sisters kayak and Hellesylt hytte", drive: "4.5hrs", stops: ["sogndal", "stryn", "geirangerRoad", "geirangerKayak", "stadheimHytte"] },
           { date: "Sun 30 Aug", label: "Trollstigen to Bergen", drive: "4.5hrs", flightNote: flightNotes.day6A, stops: ["trollstigen", "trollvegen", "bergenshallen"] },
           sharedDays.day7
         ],
         summary: {
-          activities: ["Nærøyfjord kayak", "Seven Sisters kayak", "Trolltunga", "Trollstigen"],
-          pros: ["Biggest scenic loop", "Maximum fjord time", "Includes both marquee kayak days"],
+          activities: ["Nærøyfjord kayak", "Seven Sisters kayak", "Trolltunga", "Trollstigen", "Hellesylt hytte"],
+          pros: ["Biggest scenic loop", "Maximum fjord time", "Includes both marquee kayak days", "Adds a cheap hytte night after Geiranger"],
           cons: ["Most driving", "Needs DY1318", "Tightest Saturday/Sunday pacing"]
         }
       },
@@ -707,6 +718,9 @@
       BC: [
         ["Fretheim Fjordhytter 1 night", "Book 4–6 weeks out", "£101pp", "https://www.fretheimhytter.com/booking", "Email: f-fjord@online.no Tel: +47 91 72 79 69"]
       ],
+      A: [
+        ["Stadheimfossen Camping & Hytter cabin Sat 29 Aug", "Book 4–6 weeks out", "£14pp base", "https://stadheimfossencamping.no/home/prices", "NOK 550 low-season cabin near Hellesylt; linen, towels and shower tokens may be extra. Phone +47 406 02 017 / Stadheimfossen@gmail.com"]
+      ],
       B: [
         ["Flight choice DY1316 or DY1318", "Book now", "£0 (variable)", "https://www.norwegian.com", ""]
       ]
@@ -736,6 +750,7 @@
       if (["A", "B"].includes(planKey)) rows.push(...BOOKING_GROUPS.AB);
       if (["A", "C"].includes(planKey)) rows.push(...BOOKING_GROUPS.AC);
       if (["B", "C"].includes(planKey)) rows.push(...BOOKING_GROUPS.BC);
+      if (planKey === "A") rows.push(...BOOKING_GROUPS.A);
       if (planKey === "B") rows.push(...BOOKING_GROUPS.B);
       return rows.map((row, idx) => ({ id: `${planKey}-${idx}-${row[0].replace(/\W+/g, "-")}`, task: row[0], deadline: row[1], cost: row[2], link: row[3], note: row[4] }));
     }
@@ -825,6 +840,7 @@
           </div>
           <div class="day-body">
             ${renderStaticMap(day)}
+            ${day.stops.some(id => STOPS[id].isHytte) ? `<div class="stay-callout">🏡 ${STOPS[day.stops.find(id => STOPS[id].isHytte)].hytteNote}</div>` : ""}
             ${day.flightNote ? `<details class="flight-note"><summary>✈ Flight options</summary><div class="flight-note-content">${day.flightNote}</div></details>` : ""}
             <div class="stop-list">
               ${day.stops.map(id => {
